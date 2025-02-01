@@ -23,6 +23,13 @@ public class CatalogController {
         this.userManager = new UserManager();
     }
 
+    /**
+     * A program indításakor bejelentkezik a felhasználó, majd megjeleníti a menüt
+     * és lehetőséget biztosít a felhasználónak különböző műveletek végrehajtására
+     * (pl. könyv hozzáadása, törlés, listázás stb.).
+     *
+     * @throws SQLException Ha adatbázis hiba történik a felhasználó bejelentkezése közben.
+     */
     public void start() throws SQLException {
         loginUser();
         while (true) {
@@ -86,6 +93,13 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Bejelentkezés a rendszerbe a felhasználónév és jelszó megadásával.
+     * Ha a felhasználó sikeresen bejelentkezett, beállítja az aktuális felhasználót.
+     * Ha a bejelentkezés sikertelen, kilép a program.
+     *
+     * @throws SQLException Ha hiba történik a bejelentkezési folyamat során.
+     */
     private void loginUser() throws SQLException {
         System.out.println("Bejelentkezés");
         System.out.print("Felhasználónév: ");
@@ -102,6 +116,9 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Megjeleníti a felhasználói menüt, ahol a felhasználó választhat a különböző műveletek között.
+     */
     private void showMenu() {
         System.out.println("1. Könyv hozzáadása");
         System.out.println("2. Könyv törlése");
@@ -113,6 +130,10 @@ public class CatalogController {
         System.out.println("8. Kilépés");
     }
 
+    /**
+     * Hozzáad egy új könyvet a katalógushoz, miután a felhasználó megadta a könyv adatait.
+     * Az új könyvet az adatbázisba is menti.
+     */
     public void addBook() {
         Scanner scanner = new Scanner(System.in);
 
@@ -143,6 +164,9 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Töröl egy könyvet azonosítója alapján a katalógusból és az adatbázisból.
+     */
     private void deleteBook() {
         System.out.println("Add meg a törlendő könyv ID-ját: ");
         String input = scanner.nextLine();
@@ -163,6 +187,11 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Listázza az összes könyvet a katalógusból, és kiírja azokat a konzolra.
+     *
+     * @throws SQLException Ha adatbázis hiba történik a könyvek lekérésekor.
+     */
     private void listBooks() throws SQLException {
         List<Book> books = DatabaseHandler.loadBooks();
         if (books.isEmpty()) {
@@ -174,6 +203,9 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Keres egy könyvet a cím alapján, és megjeleníti a találatokat a konzolon.
+     */
     private void searchBooks() {
         System.out.println("Add meg a keresett könyv címét: ");
         String keyword = scanner.nextLine();
@@ -192,6 +224,10 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Ment egy fájlba az összes könyvet a katalógusból.
+     * A fájl nevét a felhasználó adja meg.
+     */
     private void saveToFile() {
         System.out.println("Add meg a fájl nevét a mentéshez: ");
         String filename = scanner.nextLine();
@@ -212,6 +248,10 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Betölt könyveket egy fájlból, és elmenti őket az adatbázisba.
+     * A fájl nevét a felhasználó adja meg.
+     */
     private void loadFromFile() {
         System.out.println("Add meg a fájl nevét a betöltéshez: ");
         String filename = scanner.nextLine();
@@ -235,6 +275,9 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Ment egy könyvet az adatbázisba az összes könyv listája alapján.
+     */
     private void saveToDatabase() {
         List<Book> books = catalog.listBooks();
         if (books.isEmpty()) {

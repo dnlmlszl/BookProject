@@ -8,6 +8,12 @@ import java.util.*;
 
 public class DatabaseHandler {
 
+    /**
+     * Elmenti a könyvet az adatbázisba.
+     *
+     * @param book A menteni kívánt könyv objektuma.
+     * @throws SQLException Ha hiba történik az adatbázisba való mentés során.
+     */
     public static void saveBook(Book book) throws SQLException {
 
         String query = "INSERT INTO books (id, title, publicationYear, price) VALUES (?, ?, ?, ?)";
@@ -63,6 +69,12 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Lekéri az összes könyvet az adatbázisból.
+     *
+     * @return A könyvek listája.
+     * @throws SQLException Ha hiba történik az adatbázisból való lekérés során.
+     */
     public static List<Book> loadBooks() throws SQLException {
         List<Book> books = new ArrayList<>();
         String query = "SELECT b.id, b.title, b.publicationYear, b.price, a.id AS author_id, a.name AS author_name " +
@@ -105,7 +117,12 @@ public class DatabaseHandler {
         return books;
     }
 
-
+    /**
+     * Frissíti a meglévő könyvet az adatbázisban.
+     *
+     * @param book A frissíteni kívánt könyv objektuma.
+     * @throws SQLException Ha hiba történik az adatbázisban a frissítés során.
+     */
     public static void updateBook(Book book) throws SQLException {
         String query = "UPDATE books SET title = ?, authors = ?, publicationYear = ?, price = ? WHERE id = ?";
 
@@ -127,6 +144,12 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Törli a könyvet az adatbázisból a megadott könyv ID alapján.
+     *
+     * @param bookId A törlendő könyv azonosítója.
+     * @throws SQLException Ha hiba történik az adatbázisból való törlés során.
+     */
     public static void deleteBook(int bookId) throws SQLException {
         String deleteBookAuthorsQuery = "DELETE FROM book_authors WHERE book_id = ?";
         String deleteBookQuery = "DELETE FROM books WHERE id = ?";
@@ -149,7 +172,13 @@ public class DatabaseHandler {
         }
     }
 
-
+    /**
+     * Keresést végez a könyvek között a cím alapján.
+     *
+     * @param keyword A keresett könyv címének egy részlete.
+     * @return A keresési kritériumoknak megfelelő könyvek listája.
+     * @throws SQLException Ha hiba történik az adatbázisban a keresés során.
+     */
     public static List<Book> searchBooks(String keyword) throws SQLException {
         List<Book> books = new ArrayList<>();
         String query = "SELECT b.id, b.title, b.publicationYear, b.price, GROUP_CONCAT(a.name SEPARATOR ', ') AS authors "
@@ -179,6 +208,13 @@ public class DatabaseHandler {
         return books;
     }
 
+    /**
+     * Lekéri a könyvet az adatbázisból a könyv ID alapján.
+     *
+     * @param id A keresett könyv azonosítója.
+     * @return A könyv objektuma, ha megtalálható, különben null.
+     * @throws SQLException Ha hiba történik az adatbázisból való lekérés során.
+     */
     public static Book loadBookById(int id) throws SQLException {
         String query = "SELECT b.id, b.title, b.publicationYear, b.price, a.id AS author_id, a.name AS author_name " +
                 "FROM books b " +

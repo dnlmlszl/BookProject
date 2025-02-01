@@ -12,6 +12,16 @@ import java.sql.SQLException;
 
 public class UserManager {
 
+    /**
+     * Bejelentkezik egy felhasználó a megadott felhasználónév és jelszó alapján.
+     * Ellenőrzi a megadott hitelesítési adatokat, és visszaadja a megfelelő felhasználót,
+     * ha a bejelentkezés sikeres. Ha a hitelesítés nem sikerül, null értékkel tér vissza.
+     *
+     * @param username A felhasználó neve.
+     * @param password A felhasználó jelszava.
+     * @return A bejelentkezett felhasználó objektuma, ha sikeres, egyébként null.
+     * @throws SQLException Ha hiba történik az adatbázisban a felhasználói adatok lekérésekor.
+     */
     public User login(String username, String password) throws SQLException {
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         try(Connection connection = DatabaseConnection.getConnection()) {

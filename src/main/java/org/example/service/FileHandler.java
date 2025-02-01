@@ -6,6 +6,13 @@ import java.io.*;
 import java.util.*;
 
 public class FileHandler {
+    /**
+     * Elmenti a könyvek listáját egy szöveges fájlba.
+     *
+     * @param books A menteni kívánt könyvek listája.
+     * @param filename A fájl neve, ahová a könyveket menteni kell.
+     * @throws IOException Ha hiba történik a fájl írása közben.
+     */
     public static void saveToTextFile(List<Book> books, String filename) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Book book : books) {
@@ -15,6 +22,14 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Betölti a könyvek listáját egy szöveges fájlból.
+     *
+     * @param filename A fájl neve, ahonnan a könyveket be kell tölteni.
+     * @return A fájlból beolvasott könyvek listája.
+     * @throws IOException Ha hiba történik a fájl olvasása közben.
+     * @throws SQLException Ha hiba történik az adatbázisba történő mentés során a betöltött könyvek esetében.
+     */
     public static List<Book> loadFromTextFile(String filename) throws IOException {
         List<Book> books = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -28,6 +43,13 @@ public class FileHandler {
         return books;
     }
 
+    /**
+     * Egy fájlsorban található adatokat könyv objektummá alakít.
+     *
+     * @param line A fájlsor, amely a könyv adatait tartalmazza.
+     * @return A fájlsor alapján létrehozott könyv objektuma.
+     * @throws IllegalArgumentException Ha a fájlsor formátuma nem megfelelő, vagy nem tartalmazza az összes szükséges adatot.
+     */
     public static Book parseBookFromLine(String line) {
         // Ellenőrizzük, hogy a sor tartalmazza-e a szükséges mezőket
         if (!line.contains("ID:") || !line.contains("Title:") || !line.contains("Authors:") ||
