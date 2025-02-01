@@ -1,9 +1,8 @@
 package org.example.controller;
 
 import org.example.model.Book;
-import org.example.service.BookCatalog;
-import org.example.service.DatabaseHandler;
-import org.example.service.FileHandler;
+import org.example.model.User;
+import org.example.service.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,44 +14,91 @@ import java.util.Set;
 public class CatalogController {
     private BookCatalog catalog;
     private Scanner scanner;
+    private User currentUser;
+    private UserManager userManager;
 
     public CatalogController() {
         this.catalog = new BookCatalog();
         this.scanner = new Scanner(System.in);
+        this.userManager = new UserManager();
     }
 
     public void start() throws SQLException {
+        loginUser();
         while (true) {
             showMenu();
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
                 case 1:
-                    addBook();
+                    if (AccessControl.hasPermission(currentUser.getRole(), "addBook")) {
+                        addBook();
+                    } else {
+                        System.out.println("Nincs jogosultságod könyv hozzáadásához!");
+                    }
                     break;
                 case 2:
-                    deleteBook();
+                    if (AccessControl.hasPermission(currentUser.getRole(), "deleteBook")) {
+                        deleteBook();
+                    } else {
+                        System.out.println("Nincs jogosultságod könyv törléséhez!");
+                    }
                     break;
                 case 3:
-                    listBooks();
+                    if (AccessControl.hasPermission(currentUser.getRole(), "listBooks")) {
+                        listBooks();
+                    } else {
+                        System.out.println("Nincs jogosultságod könyvek listázásához!");
+                    }
                     break;
                 case 4:
-                    searchBooks();
+                    if (AccessControl.hasPermission(currentUser.getRole(), "searchBooks")) {
+                        searchBooks();
+                    } else {
+                        System.out.println("Nincs jogosultságod könyv kereséséhez!");
+                    }
                     break;
                 case 5:
-                    saveToFile();
+                    if (AccessControl.hasPermission(currentUser.getRole(), "saveToFile")) {
+                        saveToFile();
+                    } else {
+                        System.out.println("Nincs jogosultságod fájlba mentéshez!");
+                    }
                     break;
                 case 6:
-                    loadFromFile();
+                    if (AccessControl.hasPermission(currentUser.getRole(), "loadFromFile")) {
+                        loadFromFile();
+                    } else {
+                        System.out.println("Nincs jogosultságod fájlból betöltéshez!");
+                    }
                     break;
                 case 7:
-                    saveToDatabase();
+                    if (AccessControl.hasPermission(currentUser.getRole(), "saveToDatabase")) {
+                        saveToDatabase();
+                    } else {
+                        System.out.println("Nincs jogosultságod adatbázisba mentéshez!");
+                    }
                     break;
                 case 8:
                     System.exit(0);
-                    break;
                 default:
                     System.out.println("Érvénytelen választás!");
             }
+        }
+    }
+
+    private void loginUser() throws SQLException {
+        System.out.println("Bejelentkezés");
+        System.out.print("Felhasználónév: ");
+        String username = scanner.nextLine();
+        System.out.print("Jelszó: ");
+        String password = scanner.nextLine();
+
+        currentUser = userManager.login(username, password);
+        if (currentUser == null) {
+            System.out.println("Hibás felhasználónév vagy jelszó. Kilépés...");
+            System.exit(0);
+        } else {
+            System.out.println("Sikeres bejelentkezés! Felhasználó: " + currentUser.getUsername());
         }
     }
 
