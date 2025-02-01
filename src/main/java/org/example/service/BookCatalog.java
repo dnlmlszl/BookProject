@@ -1,4 +1,6 @@
-package org.example.model;
+package org.example.service;
+
+import org.example.model.Book;
 
 import java.util.*;
 
