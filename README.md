@@ -51,6 +51,27 @@ A különböző szerepekhez eltérő jogosultságok tartoznak, és minden művel
 3. **Adatok Mentése**:
     - A felhasználók bármikor menthetik a katalógust fájlba vagy adatbázisba.
 
+## Projekt Konfiguráció
+
+A projekt használatához szükséges egy config.properties fájl, amely tartalmazza az adatbázis kapcsolatokat.
+Hozz létre egy új fájlt a projekt gyökérkönyvtárában, és nevezd el config.properties-nek.
+A fájlban add meg a szükséges adatbázis kapcsolatokat, például:
+
+´´´bash
+1. **Fő adatbázis kapcsolati beállítások**:
+- **db.url=<ADATBAZIS_URL>**
+- **db.user=<ADATBAZIS_FELHASZNALONEV>**
+- **db.password=<ADATBAZIS_JELSZO>**
+
+2. **Teszt adatbázis kapcsolati beállítások**:
+- **test.db.url=<TESZT_ADATBAZIS_URL>**
+- **test.db.user=<TESZT_FELHASZNALONEV>**
+- **test.db.password=<TESZT_JELSZO>**
+
+´´´
+Cseréld ki a <ADATBAZIS_URL>, <ADATBAZIS_FELHASZNALONEV>, <ADATBAZIS_JELSZO>, <TESZT_ADATBAZIS_URL>, 
+<TESZT_FELHASZNALONEV> és <TESZT_JELSZO> helyeket a saját adatbázis kapcsolati információidra.
+
 ## Használatba vétel
 
 A rendszer beállítása után a felhasználók a következő lehetőségek közül választhatnak a könyvek kezelésére:
