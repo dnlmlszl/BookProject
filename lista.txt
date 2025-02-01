@@ -1,0 +1,3 @@
+ID: 1, Title: Data Structures and Algorithms in Java, Authors: [Roberto Tamassia], Year: 2022, Price: 129.99
+ID: 3, Title: Java as your biggest frear, Authors: [Dobey Madeira, Roberto Tamassia], Year: 2020, Price: 199.99
+ID: 4, Title: Java, java you're not my friend, bro, Authors: [Dobey Madeira, Roberto Tamassia], Year: 2019, Price: 199.99
