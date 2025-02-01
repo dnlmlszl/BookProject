@@ -57,7 +57,7 @@ A projekt használatához szükséges egy config.properties fájl, amely tartalm
 Hozz létre egy új fájlt a projekt gyökérkönyvtárában, és nevezd el config.properties-nek.
 A fájlban add meg a szükséges adatbázis kapcsolatokat, például:
 
-´´´bash
+```bash
 1. **Fő adatbázis kapcsolati beállítások**:
 - **db.url=<ADATBAZIS_URL>**
 - **db.user=<ADATBAZIS_FELHASZNALONEV>**
@@ -68,7 +68,8 @@ A fájlban add meg a szükséges adatbázis kapcsolatokat, például:
 - **test.db.user=<TESZT_FELHASZNALONEV>**
 - **test.db.password=<TESZT_JELSZO>**
 
-´´´
+```
+
 Cseréld ki a <ADATBAZIS_URL>, <ADATBAZIS_FELHASZNALONEV>, <ADATBAZIS_JELSZO>, <TESZT_ADATBAZIS_URL>, 
 <TESZT_FELHASZNALONEV> és <TESZT_JELSZO> helyeket a saját adatbázis kapcsolati információidra.
 
