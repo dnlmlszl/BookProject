@@ -1,13 +1,32 @@
 package org.example.model;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
-public class Book extends Item{
+public class Book extends Item implements Serializable {
+
     private Set<String> authors;
     private int publicationYear;
     private double price;
 
-    public Book(int id, String title, Set<String> authors, int publicationYear, double price) {
+    public Book() {
+        super(UUID.randomUUID().toString(),"Unknown author");
+        this.authors = new HashSet<>();
+        this.publicationYear = 0;
+        this.price = 0.0;
+    }
+
+    public Book(String title, Set<String> authors, int publicationYear, double price) {
+        super(UUID.randomUUID().toString(), title);
+        this.authors = authors;
+        this.publicationYear = publicationYear;
+        this.price = price;
+    }
+
+    public Book(String id, String title, Set<String> authors, int publicationYear, double price) {
         super(id, title);
         this.authors = authors;
         this.publicationYear = publicationYear;
@@ -47,7 +66,20 @@ public class Book extends Item{
      */
     @Override
     public String getItemInfo() {
-        return super.getItemInfo() + ", Authors: " + authors + ", Year: " + publicationYear + ", Price: " + price;
+        return super.getItemInfo() + ", Authors: " + authors + ", Year: " + publicationYear + ", Price: $" + price;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Book book = (Book) obj;
+        return getTitle().equals(book.getTitle()) && authors.equals(book.authors);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle(), authors);
     }
 
     /**
@@ -59,6 +91,7 @@ public class Book extends Item{
      */
     @Override
     public boolean matches(String keyword) {
-        return super.matches(keyword) || authors.contains(keyword);
+        return getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
+                authors.stream().anyMatch(a -> a.toLowerCase().contains(keyword.toLowerCase()));
     }
 }

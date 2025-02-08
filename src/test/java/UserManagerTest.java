@@ -1,5 +1,5 @@
 import org.example.config.DatabaseConfig;
-import org.example.service.UserManager;
+import org.example.service.user.UserManager;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;

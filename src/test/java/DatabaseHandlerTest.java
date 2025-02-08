@@ -1,6 +1,6 @@
 import org.example.config.DatabaseConfig;
 import org.example.model.Book;
-import org.example.service.DatabaseHandler;
+import org.example.service.database.DatabaseHandler;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;

@@ -1,22 +1,23 @@
 package org.example.model;
 
-import java.util.Objects;
+import java.util.UUID;
 
 public class Item implements CatalogItem {
-    private int id;
+    private final String id;
     private String title;
 
-    public Item(int id, String title) {
+    public Item(String id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public int getId() {
-        return id;
+    public Item(String title) {
+        this.id = UUID.randomUUID().toString(); // UUID generálása
+        this.title = title;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -25,19 +26,6 @@ public class Item implements CatalogItem {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item entity = (Item) o;
-        return id == entity.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override
@@ -52,8 +40,9 @@ public class Item implements CatalogItem {
 
     @Override
     public String toString() {
-        return "Entity{" +
+        return "Item{" +
                 "id=" + id +
+                ", title='" + title + '\'' +
                 '}';
     }
 }

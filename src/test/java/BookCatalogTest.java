@@ -1,5 +1,5 @@
 import org.example.model.Book;
-import org.example.service.BookCatalog;
+import org.example.service.book.BookCatalog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
