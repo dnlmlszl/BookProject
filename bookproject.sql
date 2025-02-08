@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: localhost:8889
--- Létrehozás ideje: 2025. Feb 01. 14:14
+-- Létrehozás ideje: 2025. Feb 08. 13:40
 -- Kiszolgáló verziója: 8.0.35
 -- PHP verzió: 8.2.20
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `authors` (
-  `id` int NOT NULL,
+  `id` varchar(36) COLLATE utf8mb3_hungarian_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb3_hungarian_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_hungarian_ci;
 
@@ -37,9 +37,8 @@ CREATE TABLE `authors` (
 --
 
 INSERT INTO `authors` (`id`, `name`) VALUES
-(1, 'Roberto Tamassia'),
-(2, 'Dobey Madeira'),
-(5, 'blabla blabla');
+('5c09c790-ac3e-4532-9bbf-1d5bb1e5402d', 'John F. Kennedy'),
+('81bce2ba-8b3b-4992-afa6-11c689b1c55d', 'Ronald Reagen');
 
 -- --------------------------------------------------------
 
@@ -48,7 +47,7 @@ INSERT INTO `authors` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `books` (
-  `id` int NOT NULL,
+  `id` varchar(36) COLLATE utf8mb3_hungarian_ci NOT NULL,
   `title` varchar(255) COLLATE utf8mb3_hungarian_ci NOT NULL,
   `publicationYear` int NOT NULL,
   `price` double NOT NULL
@@ -59,9 +58,8 @@ CREATE TABLE `books` (
 --
 
 INSERT INTO `books` (`id`, `title`, `publicationYear`, `price`) VALUES
-(1, 'Data Structures and Algorithms in Java', 2022, 129.99),
-(3, 'Java as your biggest frear', 2020, 199.99),
-(4, 'Java, java you\'re not my friend, bro', 2019, 199.99);
+('0e796100-b03a-4b47-b98d-f21c11d98779', 'It\'s my life featured Dr. Alban', 2022, 22),
+('263f756c-f487-435f-b83c-7fcc8dc0c825', 'Nagy durranas', 2011, 11);
 
 -- --------------------------------------------------------
 
@@ -70,8 +68,8 @@ INSERT INTO `books` (`id`, `title`, `publicationYear`, `price`) VALUES
 --
 
 CREATE TABLE `book_authors` (
-  `book_id` int NOT NULL,
-  `author_id` int NOT NULL
+  `book_id` varchar(36) COLLATE utf8mb3_hungarian_ci NOT NULL,
+  `author_id` varchar(36) COLLATE utf8mb3_hungarian_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_hungarian_ci;
 
 --
@@ -79,11 +77,9 @@ CREATE TABLE `book_authors` (
 --
 
 INSERT INTO `book_authors` (`book_id`, `author_id`) VALUES
-(1, 1),
-(3, 1),
-(4, 1),
-(3, 2),
-(4, 2);
+('0e796100-b03a-4b47-b98d-f21c11d98779', '5c09c790-ac3e-4532-9bbf-1d5bb1e5402d'),
+('263f756c-f487-435f-b83c-7fcc8dc0c825', '5c09c790-ac3e-4532-9bbf-1d5bb1e5402d'),
+('0e796100-b03a-4b47-b98d-f21c11d98779', '81bce2ba-8b3b-4992-afa6-11c689b1c55d');
 
 -- --------------------------------------------------------
 
@@ -104,8 +100,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
 (1, 'admin', 'secret', 'ADMIN'),
-(2, 'Bambi', 'secret', 'GUEST'),
-(3, 'Lajos', 'secret', 'USER');
+(4, 'user', 'secret', 'USER'),
+(5, 'guest', 'secret', 'GUEST');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -115,20 +111,23 @@ INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
 -- A tábla indexei `authors`
 --
 ALTER TABLE `authors`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- A tábla indexei `books`
 --
 ALTER TABLE `books`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_book` (`title`,`publicationYear`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- A tábla indexei `book_authors`
 --
 ALTER TABLE `book_authors`
   ADD PRIMARY KEY (`book_id`,`author_id`),
-  ADD KEY `author_id` (`author_id`);
+  ADD KEY `fk_author_id` (`author_id`);
 
 --
 -- A tábla indexei `users`
@@ -142,22 +141,10 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT a táblához `authors`
---
-ALTER TABLE `authors`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT a táblához `books`
---
-ALTER TABLE `books`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Megkötések a kiírt táblákhoz
@@ -167,8 +154,8 @@ ALTER TABLE `users`
 -- Megkötések a táblához `book_authors`
 --
 ALTER TABLE `book_authors`
-  ADD CONSTRAINT `book_authors_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
-  ADD CONSTRAINT `book_authors_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`);
+  ADD CONSTRAINT `fk_author_id` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_book_id` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

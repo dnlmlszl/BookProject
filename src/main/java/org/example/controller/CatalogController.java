@@ -31,11 +31,9 @@ public class CatalogController {
     /**
      * A program indításakor bejelentkezik a felhasználó, majd megjeleníti a menüt
      * és lehetőséget biztosít a felhasználónak különböző műveletek végrehajtására
-     * (pl. könyv hozzáadása, törlés, listázás stb.).
-     *
-     * @throws SQLException Ha adatbázis hiba történik a felhasználó bejelentkezése közben.
+     * (pl. könyv hozzáadása, törlés, listázás, adatbazisba / fileba mentes, adatbazisbol, filebol betoltes stb.).
      */
-    public void start() throws SQLException {
+    public void start() {
         try {
             loginUser();
             while (true) {
@@ -100,32 +98,10 @@ public class CatalogController {
         System.out.println("11. Kilépés");
     }
 
-    /*private void handleMenuChoice(int choice) {
 
-        String[] permissions = {
-                "addBook", "deleteBook", "listBooks", "searchBooks", "saveToFile", "loadFromTextFile", "saveToBinaryFile", "loadFromBinaryFile", "saveToDatabase", "loadFromDatabase"
-        };
-
-        Runnable[] actions = {
-                this::addBook, this::deleteBook, this::listBooks, this::searchBooks, this::saveToFile, this::loadFromTextFile, this::saveToBinaryFile, this::loadFromBinaryFile, this::saveToDatabase, this::loadFromDatabase
-        };
-
-        System.out.println("Actions: " + actions.length);
-        System.out.println("Permissions: " + permissions.length);
-
-        if (choice == 11) {
-            System.exit(0);
-        } else if (choice > 0 && choice <= permissions.length) {
-            if (AccessControl.hasPermission(currentUser.getRole(), permissions[choice - 1])) {
-                actions[choice - 1].run();
-            } else {
-                System.out.println("❌ Nincs jogosultságod ehhez a művelethez!");
-            }
-        } else {
-            System.out.println("❌ Érvénytelen választás!");
-        }
-    }*/
-
+    /**
+     * A felhasználói menü segedmetodusa, ami osszekapcsolja a menupontokat es az indito metodusokat.
+     */
     private void handleMenuChoice(int choice) {
         System.out.println("Felhasználói választás: " + choice);
 
@@ -209,10 +185,8 @@ public class CatalogController {
                 return;
             }
 
-            // Könyv létrehozása
             Book book = new Book(title, authorsSet, year, price);
 
-            // Ellenőrzés, hogy a könyv már létezik-e
             if (catalog.searchByTitle(title) == null) {
                 bookService.addBook(book);
                 catalog.addBook(book);
@@ -224,7 +198,6 @@ public class CatalogController {
             System.out.println("❌ Hiba történt a könyv hozzáadása közben: " + e.getMessage());
         }
     }
-
 
     /**
      * Töröl egy könyvet azonosítója alapján a katalógusból.
@@ -310,6 +283,9 @@ public class CatalogController {
         }
     }
 
+    /**
+     * Betölt könyveket egy MySQL adatbazisbol, és elmenti őket az in-memory adatbázisba.
+     */
     private void loadFromDatabase() {
         try {
             bookService.loadBooksFromDatabase();

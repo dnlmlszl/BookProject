@@ -42,7 +42,7 @@ public class BookService {
 
     /**
      * Könyvek mentése adatbázisba a memóriából.
-     * Csak a 7-es opció hívja meg ezt.
+     * Csak a 9-es opció hívja meg ezt.
      */
     public void saveBooksToDatabase() throws SQLException {
         try {

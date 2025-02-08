@@ -19,38 +19,6 @@ public class DatabaseHandler {
      * @param book A menteni kívánt könyv.
      * @throws SQLException Ha hiba történik az adatbázisba mentés során.
      */
-    /*public void saveBook(Book book) throws SQLException {
-        String bookQuery = "INSERT INTO books (id, title, publicationYear, price) VALUES (?, ?, ?, ?)" +
-                " ON DUPLICATE KEY UPDATE price = VALUES(price)";
-        try (PreparedStatement pstmt = connection.prepareStatement(bookQuery, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, book.getId());
-            pstmt.setString(1, book.getTitle());
-            pstmt.setInt(2, book.getPublicationYear());
-            pstmt.setDouble(3, book.getPrice());
-            pstmt.executeUpdate();
-
-            ResultSet generatedKeys = pstmt.getGeneratedKeys();
-            String bookId = -1;
-            if (generatedKeys.next()) {
-
-                bookId = generatedKeys.getString(1);
-            } else {
-                String selectQuery = "SELECT id FROM books WHERE title = ? AND publicationYear = ?";
-                try (PreparedStatement selectStmt = connection.prepareStatement(selectQuery)) {
-                    selectStmt.setString(1, book.getTitle());
-                    selectStmt.setInt(2, book.getPublicationYear());
-                    ResultSet rs = selectStmt.executeQuery();
-                    if (rs.next()) {
-                        bookId = rs.getString("id");
-                    }
-                }
-            }
-            if (bookId != -1) {
-                saveAuthors(bookId, book.getAuthors());
-            }
-        }
-    }*/
-
     public void saveBook(Book book) throws SQLException {
         // Ellenőrizzük, hogy a könyv már létezik-e
         String checkBookQuery = "SELECT id FROM books WHERE title = ? AND publicationYear = ?";
@@ -81,7 +49,6 @@ public class DatabaseHandler {
                 }
             }
         }
-
         // Szerzők mentése
         saveAuthors(bookId, book.getAuthors());
     }
