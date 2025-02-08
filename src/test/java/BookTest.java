@@ -16,12 +16,12 @@ class BookTest {
     void setUp() {
         authors = new HashSet<>();
         authors.add("J.K. Rowling");
-        book = new Book(1, "Harry Potter", authors, 1997, 29.99);
+        book = new Book("263f756c-f487-435f-b83c-7fcc8dc0c825", "Harry Potter", authors, 1997, 29.99);
     }
 
     @Test
     void testGetItemInfo() {
-        String expected = "ID: 1, Title: Harry Potter, Authors: [J.K. Rowling], Year: 1997, Price: 29.99";
+        String expected = "ID: 263f756c-f487-435f-b83c-7fcc8dc0c825, Title: Harry Potter, Authors: [J.K. Rowling], Year: 1997, Price: $29.99";
         assertEquals(expected, book.getItemInfo());
     }
 

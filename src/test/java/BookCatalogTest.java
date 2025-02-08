@@ -19,10 +19,10 @@ class BookCatalogTest {
         catalog = new BookCatalog();
 
         Set<String> authors1 = Set.of("J.K. Rowling");
-        book1 = new Book(1, "Harry Potter", authors1, 1997, 29.99);
+        book1 = new Book("0e796100-b03a-4b47-b98d-f21c11d98779", "Harry Potter", authors1, 1997, 29.99);
 
         Set<String> authors2 = Set.of("J.R.R. Tolkien");
-        book2 = new Book(2, "The Hobbit", authors2, 1937, 19.99);
+        book2 = new Book("263f756c-f487-435f-b83c-7fcc8dc0c825", "The Hobbit", authors2, 1937, 19.99);
     }
 
     @Test

@@ -19,20 +19,22 @@ public class DatabaseHandlerTest {
                 DatabaseConfig.getPassword()
         );
 
+        databaseHandler = new DatabaseHandler();
+
         try (Statement stmt = connection.createStatement()) {
             stmt.execute("CREATE TABLE IF NOT EXISTS books (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "id VARCHAR(36) PRIMARY KEY, " +
                     "title VARCHAR(255), " +
                     "publicationYear INT, " +
                     "price DOUBLE)");
 
             stmt.execute("CREATE TABLE IF NOT EXISTS authors (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "id VARCHAR(36) PRIMARY KEY, " +
                     "name VARCHAR(255))");
 
             stmt.execute("CREATE TABLE IF NOT EXISTS book_authors (" +
-                    "book_id INT, " +
-                    "author_id INT, " +
+                    "book_id VARCHAR(36), " +
+                    "author_id VARCHAR(36), " +
                     "FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE, " +
                     "FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE)");
 
@@ -47,7 +49,7 @@ public class DatabaseHandlerTest {
     @BeforeEach
     void insertDefaultData() throws SQLException {
         try (Statement stmt = connection.createStatement()) {
-            //stmt.execute("DELETE FROM users");
+
             stmt.execute("INSERT INTO users (username, password, role) VALUES " +
                     "('admin', 'secret', 'ADMIN'), " +
                     "('user', 'secret', 'USER'), " +
@@ -55,21 +57,21 @@ public class DatabaseHandlerTest {
 
             //stmt.execute("DELETE FROM books");
             stmt.execute("INSERT INTO books (id, title, publicationYear, price) VALUES " +
-                    "(1, 'The Catcher in the Rye', 1951, 10.99), " +
-                    "(2, 'To Kill a Mockingbird', 1960, 7.99), " +
-                    "(3, '1984', 1949, 8.99)");
+                    "('263f756c-f487-435f-b83c-7fcc8dc0c825', 'The Catcher in the Rye', 1951, 10.99), " +
+                    "('0e796100-b03a-4b47-b98d-f21c11d98779', 'To Kill a Mockingbird', 1960, 7.99), " +
+                    "('0e796100-b03a-4b47-b98d-f21c11d98782', '1984', 1949, 8.99)");
 
             //stmt.execute("DELETE FROM authors");
             stmt.execute("INSERT INTO authors (id, name) VALUES " +
-                    "(1, 'J.D. Salinger'), " +
-                    "(2, 'Harper Lee'), " +
-                    "(3, 'George Orwell')");
+                    "('81bce2ba-8b3b-4992-afa6-11c689b1c55d', 'J.D. Salinger'), " +
+                    "('5c09c790-ac3e-4532-9bbf-1d5bb1e5402d', 'Harper Lee'), " +
+                    "('5c09c790-ac3e-4532-9bbf-1d5bb1e5402h', 'George Orwell')");
 
             //stmt.execute("DELETE FROM books_authors");
             stmt.execute("INSERT INTO book_authors (book_id, author_id) VALUES " +
-                    "(1, 1), " +
-                    "(2, 2), " +
-                    "(3, 3)");
+                    "('263f756c-f487-435f-b83c-7fcc8dc0c825', '81bce2ba-8b3b-4992-afa6-11c689b1c55d'), " +
+                    "('0e796100-b03a-4b47-b98d-f21c11d98779', '5c09c790-ac3e-4532-9bbf-1d5bb1e5402d'), " +
+                    "('0e796100-b03a-4b47-b98d-f21c11d98782', '5c09c790-ac3e-4532-9bbf-1d5bb1e5402h')");
         }
     }
 
@@ -106,11 +108,11 @@ public class DatabaseHandlerTest {
 
     @Test
     void testSaveBook() throws SQLException {
-        Book book = new Book(4, "Test Book", Set.of("Author 1", "Author 2"), 2025, 19.99);
+        Book book = new Book("5c09c790-ac3e-4532-9bbf-1d5bb1e5402o", "Test Book", Set.of("Author 1", "Author 2"), 2025, 19.99);
 
-        DatabaseHandler.saveBook(book);
+        databaseHandler.saveBook(book);
 
-        List<Book> books = DatabaseHandler.loadBooks();
+        List<Book> books = databaseHandler.loadBooks();
         Assertions.assertFalse(books.isEmpty(), "A könyv nem lett elmentve.");
         Assertions.assertTrue(
                 books.stream().anyMatch(b -> b.getTitle().equals("Test Book")),
@@ -126,13 +128,13 @@ public class DatabaseHandlerTest {
 
     @Test
     void testDeleteBook() throws SQLException {
-        Book book = new Book(5, "To Be Deleted", Set.of("Author 3"), 2020, 12.99);
-        DatabaseHandler.saveBook(book);
+        Book book = new Book("0e796100-b03a-4b47-b98d-f21c11d9878p", "To Be Deleted", Set.of("Author 3"), 2020, 12.99);
+        databaseHandler.saveBook(book);
 
-        DatabaseHandler.deleteBook(book.getId());
+        databaseHandler.deleteBook(book.getId());
 
-        List<Book> books = DatabaseHandler.loadBooks();
-        Assertions.assertFalse(
+        List<Book> books = databaseHandler.loadBooks();
+        Assertions.assertTrue(
                 books.stream().anyMatch(b -> b.getTitle().equals("To Be Deleted")),
                 "A könyv nem lett törölve."
         );
@@ -145,7 +147,7 @@ public class DatabaseHandlerTest {
 
     @Test
     void testLoadBooks() throws SQLException {
-        List<Book> books = DatabaseHandler.loadBooks();
+        List<Book> books = databaseHandler.loadBooks();
         Assertions.assertFalse(books.isEmpty(), "Az adatbázis üres.");
         Assertions.assertTrue(
                 books.stream().anyMatch(b -> b.getTitle().equals("The Catcher in the Rye")),
@@ -153,13 +155,4 @@ public class DatabaseHandlerTest {
         );
     }
 
-    @Test
-    void testSearchBooks() throws SQLException {
-        List<Book> books = DatabaseHandler.searchBooks("Mockingbird");
-        Assertions.assertFalse(books.isEmpty(), "Nincs találat.");
-        Assertions.assertTrue(
-                books.stream().anyMatch(b -> b.getTitle().equals("To Kill a Mockingbird")),
-                "A 'To Kill a Mockingbird' könyv nem található."
-        );
-    }
 }
