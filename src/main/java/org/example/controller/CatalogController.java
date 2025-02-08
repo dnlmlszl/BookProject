@@ -11,7 +11,6 @@ import org.example.service.user.UserManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CatalogController {
     private final BookCatalog catalog;
@@ -42,7 +41,12 @@ public class CatalogController {
             while (true) {
                 showMenu();
                 try {
-                    int choice = Integer.parseInt(scanner.nextLine());
+                    String input = scanner.nextLine().trim();
+                    if (input.isEmpty()) {
+                        System.out.println("❌ Érvénytelen választás! Kérlek, adj meg egy számot.");
+                        continue;
+                    }
+                    int choice = Integer.parseInt(input);
                     handleMenuChoice(choice);
                 } catch (NumberFormatException e) {
                     System.out.println("❌ Érvénytelen választás! Kérlek, adj meg egy számot.");
@@ -96,16 +100,19 @@ public class CatalogController {
         System.out.println("11. Kilépés");
     }
 
-    private void handleMenuChoice(int choice) {
+    /*private void handleMenuChoice(int choice) {
+
         String[] permissions = {
-                "addBook", "deleteBook", "listBooks", "searchBooks", "saveToFile", "loadFromFile",
-                "saveToBinaryFile", "loadFromBinaryFile", "saveToDatabase", "loadFromDatabase"
+                "addBook", "deleteBook", "listBooks", "searchBooks", "saveToFile", "loadFromTextFile", "saveToBinaryFile", "loadFromBinaryFile", "saveToDatabase", "loadFromDatabase"
         };
+
         Runnable[] actions = {
-                this::addBook, this::deleteBook, this::listBooks, this::searchBooks, this::saveToFile,
-                this::loadFromFile, this::saveToBinaryFile, this::loadFromBinaryFile, this::saveToDatabase,
-                this::loadFromDatabase
+                this::addBook, this::deleteBook, this::listBooks, this::searchBooks, this::saveToFile, this::loadFromTextFile, this::saveToBinaryFile, this::loadFromBinaryFile, this::saveToDatabase, this::loadFromDatabase
         };
+
+        System.out.println("Actions: " + actions.length);
+        System.out.println("Permissions: " + permissions.length);
+
         if (choice == 11) {
             System.exit(0);
         } else if (choice > 0 && choice <= permissions.length) {
@@ -117,7 +124,43 @@ public class CatalogController {
         } else {
             System.out.println("❌ Érvénytelen választás!");
         }
+    }*/
+
+    private void handleMenuChoice(int choice) {
+        System.out.println("Felhasználói választás: " + choice);
+
+        Map<Integer, Runnable> actions = Map.of(
+                1, this::addBook,
+                2, this::deleteBook,
+                3, this::listBooks,
+                4, this::searchBooks,
+                5, this::saveToFile,
+                6, this::loadFromTextFile,
+                7, this::saveToBinaryFile,
+                8, this::loadFromBinaryFile,
+                9, this::saveToDatabase,
+                10, this::loadFromDatabase
+        );
+
+        if (choice == 11) {
+            System.exit(0);
+        } else if (actions.containsKey(choice)) {
+            String[] permissions = {
+                    "addBook", "deleteBook", "listBooks", "searchBooks", "saveToFile",
+                    "loadFromTextFile", "saveToBinaryFile", "loadFromBinaryFile",
+                    "saveToDatabase", "loadFromDatabase"
+            };
+
+            if (AccessControl.hasPermission(currentUser.getRole(), permissions[choice - 1])) {
+                actions.get(choice).run();
+            } else {
+                System.out.println("❌ Nincs jogosultságod ehhez a művelethez!");
+            }
+        } else {
+            System.out.println("❌ Érvénytelen választás!");
+        }
     }
+
 
     /**
      * Hozzáad egy új könyvet a katalógushoz, miután a felhasználó megadta a könyv adatait.
@@ -245,7 +288,7 @@ public class CatalogController {
      * Betölt könyveket egy text fájlból.
      * A fájl neve books.dat.
      */
-    private void loadFromFile() {
+    private void loadFromTextFile() {
         try {
             bookService.loadBooksFromFile();
             System.out.println("✅ Könyvek sikeresen betöltve a fájlból.");

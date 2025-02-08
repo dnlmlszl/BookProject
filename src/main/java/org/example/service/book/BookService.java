@@ -75,7 +75,7 @@ public class BookService {
      */
     public void loadBooksFromFile() throws IOException {
         bookCatalog.loadFromTextFile();
-        //bookCatalog.loadFromBinaryFile();
+
     }
 
     /**

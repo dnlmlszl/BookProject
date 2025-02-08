@@ -166,7 +166,7 @@ public class BookCatalog implements Comparator<Book> {
                 String[] parts = line.split(";");
                 if (parts.length != 5) continue;
 
-                int id = Integer.parseInt(parts[0]);
+                String id = parts[0];
                 String title = parts[1];
                 Set<String> authors = new HashSet<>(Arrays.asList(parts[2].split(",")));
                 int publicationYear = Integer.parseInt(parts[3]);
@@ -176,7 +176,7 @@ public class BookCatalog implements Comparator<Book> {
                     continue;
                 }
 
-                addBook(new Book(title, authors, publicationYear, price));
+                addBook(new Book(id, title, authors, publicationYear, price));
             }
             System.out.println("✅ Könyvek sikeresen betöltve a " + TEXT_FILE + " fájlból.");
         } catch (IOException e) {
